@@ -77,7 +77,7 @@ class UserOperation extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     buildRowWithGap(
-                                      "النوع : ",
+                                      "الاجراء : ",
                                       getOperationType(operation),
                                     ),
                                     if (operation.serialCount != null &&
@@ -98,18 +98,19 @@ class UserOperation extends StatelessWidget {
                                           '',
                                     ),
                                     buildRowWithGap(
-                                        "رصيدك : ",
-                                        formatNumber(operation.inventory) ??
-                                            ''),
-                                    buildRowWithGap(
-                                        "الرصيد بعد الاستقطاع:",
+                                        "رصيدك السابق:",
                                         formatNumber(operation.inventory! -
-                                                (operation.userPrice ??
+                                                (operation.deposit ??
+                                                    operation.userPrice ??
                                                     operation.agentPrice ??
                                                     operation
                                                         .parentAgentPrice ??
                                                     operation.categoryPrice ??
                                                     0)) ??
+                                            ''),
+                                    buildRowWithGap(
+                                        "رصيدك الحالي : ",
+                                        formatNumber(operation.inventory) ??
                                             ''),
                                     const Gap(10),
                                     Align(

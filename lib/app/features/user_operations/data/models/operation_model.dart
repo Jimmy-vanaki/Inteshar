@@ -72,12 +72,12 @@ class Datum {
         printDate: json["print_date"] != null
             ? DateTime.tryParse(json["print_date"])
             : null,
-        userPrice: json["user_price"] ?? 0,
-        agentPrice: json["agent_price"] ?? 0,
-        parentAgentPrice: json["parent_agent_price"] ?? 0,
-        categoryPrice: json["category_price"] ?? 0,
+        userPrice: json["user_price"],
+        agentPrice: json["agent_price"],
+        parentAgentPrice: json["parent_agent_price"],
+        categoryPrice: json["category_price"],
         name: json["name"] ?? "",
-        deposit: json["deposit"] ?? 0,
+        deposit: json["deposit"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -93,12 +93,12 @@ class Datum {
         "inventory": inventory ?? 0,
         "serial_count": serialCount ?? 0,
         "print_date": printDate?.toIso8601String() ?? "",
-        "user_price": userPrice ?? 0,
-        "agent_price": agentPrice ?? 0,
-        "parent_agent_price": parentAgentPrice ?? 0,
-        "category_price": categoryPrice ?? 0,
+        "user_price": userPrice,
+        "agent_price": agentPrice,
+        "parent_agent_price": parentAgentPrice,
+        "category_price": categoryPrice,
         "name": name ?? "",
-        "deposit": deposit ?? 0,
+        "deposit": deposit,
       };
 }
 
