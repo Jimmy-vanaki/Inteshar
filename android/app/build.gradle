@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
     //firerbase
-    // id "com.google.gms.google-services"
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -31,11 +31,12 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.example.inteshar"
+    namespace "com.dijlah.inteshar"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -50,7 +51,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.inteshar"
+        applicationId "com.dijlah.inteshar"
         multiDexEnabled true
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
@@ -77,7 +78,13 @@ dependencies {
     // firebase
     // implementation platform('com.google.firebase:firebase-bom:30.3.1')
     // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.multidex:multidex:2.0.1'
 }
+
+
+
+
+
+

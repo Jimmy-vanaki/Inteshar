@@ -5,5 +5,9 @@
         "titleBar.activeForeground": "#FEF8F7"
     },
     "CodeGPT.apiKey": "CodeGPT Plus Beta",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cmake.sourceDirectory": "D:/Work/Flutter-Projects/shams/shams/linux",
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;${env:PATH}"
+    }
 }

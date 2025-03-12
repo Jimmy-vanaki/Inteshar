@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/constants.dart';
+import 'package:inteshar/app/config/constants.dart';
 
 class SettingController extends GetxController {
   var settings = <String, bool>{}.obs;
@@ -9,6 +9,7 @@ class SettingController extends GetxController {
     "printQrcode": false,
     "printCardImage": false,
     "printInformation": false,
+    "printBarCode": false,
   }.obs;
 
   @override

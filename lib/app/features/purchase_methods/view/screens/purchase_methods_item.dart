@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/core/common/constants/dashed_border.dart';
-import 'package:Inteshar/app/features/home/view/getX/purchase_methods_controller.dart';
-import 'package:Inteshar/app/features/purchase_methods/repositories/methods_manager.dart';
+import 'package:inteshar/app/config/constants.dart';
+import 'package:inteshar/app/features/home/view/getX/purchase_methods_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class PurchaseMethodsItem extends StatelessWidget {
@@ -13,23 +12,15 @@ class PurchaseMethodsItem extends StatelessWidget {
     required this.scale,
     required this.tag,
   });
+
   final double scale;
   final String tag;
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> purchaseMethodsList = [
-      {"message": 'پرینت', "icon": 'print'},
-      {"message": 'اشتراک', "icon": 'share-square'},
-      {"message": 'عکس', "icon": 'file-image'},
-      {"message": 'کپی', "icon": 'copy-alt'},
-      {"message": 'شارژ مستقیم', "icon": 'sim-card'},
-      {"message": 'sms', "icon": 'comment-sms'}
-    ];
-    PurchaseMethodsController purchaseMethodsController =
+    final PurchaseMethodsController purchaseMethodsController =
         Get.put(PurchaseMethodsController(), tag: tag);
-    final singleController =
-        Get.put(PurchaseMethodsController(), tag: 'single');
+
     return Column(
       children: [
         SizedBox(
@@ -40,51 +31,83 @@ class PurchaseMethodsItem extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
-              itemCount: purchaseMethodsList.length,
+              itemCount: purchaseMethodsController.purchaseMethodsList.length,
               itemBuilder: (context, index) {
                 return ZoomTapAnimation(
                   onTap: () {
-                    print(index);
-                    purchaseMethodsController.selectMethod(index: index);
+                    if (Constants.isLoggedIn) {
+                      purchaseMethodsController.selectMethod(index: index);
+                    } else {
+                      Get.snackbar(
+                        'تنبيه',
+                        'لاتمام عملية الشراء يرجى تسجيل الدخول',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red.withOpacity(0.8),
+                        colorText: Colors.white,
+                        margin: const EdgeInsets.all(16),
+                        duration: const Duration(seconds: 3),
+                      );
+                    }
                   },
                   child: Tooltip(
-                    message: purchaseMethodsList[index]['message'],
+                    message: purchaseMethodsController
+                        .purchaseMethodsList[index]['message'],
                     child: Obx(
                       () => Container(
-                        height: scale,
                         width: scale,
-                        margin: const EdgeInsets.only(
-                            left: 4, top: 1, bottom: 1, right: 1),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
                         padding: const EdgeInsets.all(8),
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: purchaseMethodsController
-                                          .purchaseMethodsSelected.value ==
-                                      index
-                                  ? Colors.grey.withOpacity(0.5)
-                                  : Colors.transparent,
-                              blurRadius: 2,
-                              offset: const Offset(0, 0),
-                            ),
-                          ],
+                          border: Border.all(
+                            color: index ==
+                                    purchaseMethodsController
+                                        .purchaseMethodsSelected.value
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).colorScheme.surface,
+                          ),
                           color: purchaseMethodsController
                                       .purchaseMethodsSelected.value ==
                                   index
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.transparent,
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: SvgPicture.asset(
-                          'assets/svgs/${purchaseMethodsList[index]['icon']}.svg',
-                          colorFilter: ColorFilter.mode(
-                            purchaseMethodsController
-                                        .purchaseMethodsSelected.value ==
-                                    index
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).colorScheme.primary,
-                            BlendMode.srcIn,
-                          ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svgs/${purchaseMethodsController.purchaseMethodsList[index]['icon']}.svg',
+                              colorFilter: ColorFilter.mode(
+                                purchaseMethodsController
+                                            .purchaseMethodsSelected.value ==
+                                        index
+                                    ? Colors.black
+                                    : Theme.of(context).colorScheme.onPrimary,
+                                BlendMode.srcIn,
+                              ),
+                              width: scale - 40,
+                              height: scale - 40,
+                            ),
+                            const Gap(6),
+                            Text(
+                              purchaseMethodsController
+                                  .purchaseMethodsList[index]['message'],
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: purchaseMethodsController
+                                            .purchaseMethodsSelected.value ==
+                                        index
+                                    ? Colors.black
+                                    : Theme.of(context).colorScheme.onPrimary,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -95,53 +118,6 @@ class PurchaseMethodsItem extends StatelessWidget {
           ),
         ),
         const Gap(20),
-        Obx(() {
-          return (singleController.purchaseMethodsSelected.value != -1)
-              ? DashedBorder(
-                  child: Container(
-                    width: double.infinity,
-                    height: 300,
-                    child: Center(child: Text('data')),
-                  ),
-                )
-              : SizedBox();
-        }),
-        const Gap(20),
-        Obx(
-          () {
-            return (purchaseMethodsController.purchaseMethodsSelected.value !=
-                    -1)
-                ? ElevatedButton(
-                    onPressed: () {
-                      print(purchaseMethodsController
-                          .purchaseMethodsSelected.value);
-                      manageMethods(
-                          type: purchaseMethodsController
-                              .purchaseMethodsSelected.value);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/svgs/paper-plane-top.svg',
-                          width: 20,
-                          height: 20,
-                          colorFilter: ColorFilter.mode(
-                            Theme.of(context).colorScheme.onPrimary,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        const Gap(10),
-                        const Text(
-                          'ارسال',
-                        ),
-                      ],
-                    ),
-                  )
-                : const SizedBox();
-          },
-        ),
       ],
     );
   }

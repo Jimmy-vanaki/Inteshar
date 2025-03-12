@@ -5,6 +5,7 @@ class InvoiceController extends GetxController {
   FixedExtentScrollController fixedExtentScrollController =
       FixedExtentScrollController();
   RxInt selected = 0.obs;
+  final TextEditingController phoneController = TextEditingController(text: '');
 
   @override
   void onInit() {

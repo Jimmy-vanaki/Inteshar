@@ -1,0 +1,7 @@
+flutter_native_splash:
+  color: "#FFFFFF" # رنگ صفحه اسپلاش (اینجا سفید است)
+  image: assets/images/logo-wt.png # آدرس تصویر لوگوی اسپلاش
+  android: true # فعال کردن برای اندروید
+  ios: true # فعال کردن برای iOS
+  android_gravity: center # مکان لوگو در اندروید
+  ios_content_mode: scaleAspectFill # نحوه نمایش تصویر در iOS

@@ -1,24 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:inteshar/app/features/home/data/models/home_model.dart';
+import 'package:inteshar/app/features/home/repositories/home_repository.dart';
 
 class CompanyArchiveController extends GetxController {
-  final List<String> allCompanies = [
-    'asiacell',
-    'max cards',
-    'irancell',
-    'Date',
-    'Elderberry',
-    'Fig',
-    'Grapes',
-    'Honeydew',
-  ];
-  RxList filteredCompanies = [].obs;
+  final HomeRepository homeRepository = Get.find<HomeRepository>();
+  RxList<Company> allCompanies = <Company>[].obs;
+  RxList<Company> filteredCompanies = <Company>[].obs;
   TextEditingController searchController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
+    allCompanies.value =
+        homeRepository.getHomeData().first.companyCategories.first.companies;
     filteredCompanies.value = allCompanies;
-
     searchController.addListener(() {
       filterListFunction();
     });
@@ -26,16 +22,19 @@ class CompanyArchiveController extends GetxController {
 
   @override
   void onClose() {
-    // dispose stream
     searchController.dispose();
     super.onClose();
   }
 
-  // Function to filter the list based on search input
   void filterListFunction() {
     final query = searchController.text.toLowerCase();
-    filteredCompanies.value = allCompanies
-        .where((item) => item.toLowerCase().contains(query))
-        .toList();
+
+    if (query.isEmpty) {
+      filteredCompanies.value = allCompanies;
+    } else {
+      filteredCompanies.value = allCompanies.where((item) {
+        return item.title.toLowerCase().contains(query);
+      }).toList();
+    }
   }
 }

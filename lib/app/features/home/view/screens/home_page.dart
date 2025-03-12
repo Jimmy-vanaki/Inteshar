@@ -1,77 +1,280 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/constants.dart';
-import 'package:Inteshar/app/core/routes/routes.dart';
-import 'package:Inteshar/app/core/utils/custom_loading.dart';
-import 'package:Inteshar/app/features/home/view/widgets/company_list_slider.dart';
-import 'package:Inteshar/app/features/home/view/widgets/other_services.dart';
-import 'package:Inteshar/app/features/home/view/widgets/product_list.dart';
-import 'package:Inteshar/app/features/home/view/widgets/separator.dart';
-import 'package:Inteshar/app/features/home/view/widgets/wallet_card.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:inteshar/app/config/constants.dart';
+import 'package:inteshar/app/config/functions.dart';
+import 'package:inteshar/app/config/status.dart';
+import 'package:inteshar/app/core/common/widgets/offline_widget.dart';
+import 'package:inteshar/app/core/common/widgets/retry_widget.dart';
+import 'package:inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/core/utils/custom_loading.dart';
+import 'package:inteshar/app/features/home/data/data_source/home_api_provider.dart';
+import 'package:inteshar/app/features/home/data/models/home_model.dart';
+import 'package:inteshar/app/features/home/view/getX/company_slider_controller.dart';
+import 'package:inteshar/app/features/home/view/widgets/ad_slider.dart';
+import 'package:inteshar/app/features/home/view/widgets/company_list_slider.dart';
+import 'package:inteshar/app/features/home/view/widgets/favority_item.dart';
+import 'package:inteshar/app/features/home/view/widgets/other_services.dart';
+import 'package:inteshar/app/features/home/view/widgets/product_list.dart';
+import 'package:inteshar/app/features/home/view/widgets/separator.dart';
+import 'package:inteshar/app/features/page_view/view/getX/scaffold_controller.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    required this.scaffoldController,
+  });
+
+  // Function to refresh the home data
+  Future<void> _refreshData(HomeApiProvider homeApiProvider) async {
+    await homeApiProvider.fetchHomeData();
+  }
+
+  final ScaffoldController scaffoldController;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // final ProductsApiProvider productsApiProvider = Get.find(tag: 'random');
+    final CompanySliderController companySliderController =
+        Get.put(CompanySliderController());
+    final HomeApiProvider homeApiProvider = Get.put(HomeApiProvider());
 
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Gap(10),
-            WalletCard(size: size),
-            const Separator(title: 'خدمات مميزة'),
-            const OtherServices(),
-            const Gap(20),
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 120.0,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 3),
-              ),
-              items: [1, 2, 3, 4, 5].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.all(5.0),
-                      height: 120,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: Constants.intesharBoxDecoration(context),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        height: 120,
-                        width: double.infinity,
-                        imageUrl:
-                            "https://images.unsplash.com/ephoto-1728943492981-be3e94e4d551?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%)3D",
-                        placeholder: (context, url) => const CustomLoading(),
-                        errorWidget: (context, url, error) => Image.asset(
-                          'assets/images/not.jpg',
-                          fit: BoxFit.fill,
-                          height: 120,
-                          width: double.infinity,
+    homeApiProvider.fetchHomeData();
+    return SizedBox(
+      width: Get.width,
+      child: Obx(
+        () {
+          switch (homeApiProvider.rxRequestStatus.value) {
+            case Status.completed:
+              return Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: Get.width,
+                    margin: const EdgeInsets.only(top: 105),
+                    child: LiquidPullToRefresh(
+                      onRefresh: () async {
+                        _refreshData(homeApiProvider);
+                        companySliderController.activeCompany.value = -1;
+                        companySliderController.selected.value = -1;
+                        companySliderController.isLoading.value = false;
+                      },
+                      showChildOpacityTransition: false,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      springAnimationDurationInMilliseconds: 1500,
+                      color:
+                          Theme.of(context).colorScheme.secondary.withAlpha(70),
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20)
+                              .copyWith(top: 60),
+                          child: Column(
+                            children: [
+                              const Separator(title: 'خدمات مميزة'),
+                              const OtherServices(),
+                              const Gap(20),
+                              AdSlider(homeApiProvider: homeApiProvider),
+                              const Separator(
+                                title: 'الشركات',
+                              ),
+                              CompanyListSlider(
+                                  companyList: homeApiProvider.homeDataList),
+                              const Gap(20),
+                              Obx(() {
+                                if (companySliderController
+                                        .activeCompany.value ==
+                                    -1) {
+                                  final List<Company> allCompanies = [];
+                                  for (var category in homeApiProvider
+                                      .homeDataList.first.companyCategories) {
+                                    allCompanies.addAll(
+                                        List<Company>.from(category.companies));
+                                  }
+
+                                  return ProductsList(
+                                    products: allCompanies,
+                                  );
+                                } else {
+                                  return ProductsList(
+                                    products: homeApiProvider
+                                        .homeDataList
+                                        .first
+                                        .companyCategories[
+                                            companySliderController
+                                                .selected.value]
+                                        .companies,
+                                  );
+                                }
+                              }),
+                              const Gap(10),
+                              const FavorityItem(),
+                              const Gap(90),
+                            ],
+                          ),
                         ),
                       ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-            Separator(title: 'الشركات', ontap: () {
-              Get.toNamed(Routes.companiesArchivePage);
-            }),
-            const CompanyListSlider(),
-            const Separator(title: 'مختارات'),
-            ProductsList(),
-            const Gap(90),
-          ],
-        ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    width: Get.width,
+                    height: 190,
+                    child: ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.modulate,
+                      ),
+                      child: Image.asset(
+                        'assets/images/cr-main.png',
+                        width: Get.width,
+                        height: 190,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // Positioned(
+                  //   top: 170,
+                  //   child: Container(
+                  //     width: 80,
+                  //     height: 80,
+                  //     decoration: BoxDecoration(
+                  //       color: Theme.of(context).colorScheme.surface,
+                  //       border: Border.all(color: Colors.white, width: 3),
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     // padding: const EdgeInsets.all(15),
+                  //     alignment: Alignment.center,
+                  //     child: Image.asset(
+                  //       'assets/images/logo-1.png',
+                  //       width: 60,
+                  //       height: 60,
+                  //     ),
+                  //   ),
+                  // ),
+                  Positioned(
+                    top: 40,
+                    child: SizedBox(
+                      width: Get.width,
+                      child: Column(
+                        children: [
+                          const Gap(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    if (scaffoldController.drawerOpen.value) {
+                                      scaffoldController.closeDrawer();
+                                    } else {
+                                      scaffoldController.openDrawer();
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    'assets/svgs/bars-staggered.svg',
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                                Constants.isLoggedIn
+                                    ? Obx(
+                                        () {
+                                          HomeModel? user;
+                                          if (homeApiProvider
+                                              .homeDataList.isNotEmpty) {
+                                            user = homeApiProvider
+                                                .homeDataList.first;
+                                          }
+
+                                          return user != null
+                                              ? Text(
+                                                  user.user?.name ?? '',
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                    fontSize: 17,
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink();
+                                        },
+                                      )
+                                    : const OfflineWidget(
+                                        showLogo: false,
+                                      ),
+                                ZoomTapAnimation(
+                                  onTap: () {
+                                    Get.toNamed(
+                                      Routes.notifArchive,
+                                    );
+                                  },
+                                  child: SvgPicture.asset(
+                                    'assets/svgs/bell.svg',
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.onPrimary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Constants.isLoggedIn
+                              ? Obx(
+                                  () {
+                                    if (homeApiProvider.homeDataList.isEmpty) {
+                                      return const Center(
+                                        child: CustomLoading(),
+                                      );
+                                    }
+
+                                    return Column(
+                                      children: [
+                                        const Gap(5),
+                                        Obx(
+                                          () => Text(
+                                            formatNumber(homeApiProvider
+                                                    .inventory.value) ??
+                                                '',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            case Status.loading:
+              return const CustomLoading();
+            case Status.error:
+              return RetryWidget(
+                onTap: () {
+                  homeApiProvider.fetchHomeData();
+                },
+              );
+            default:
+              return const Text("Unknown state");
+          }
+        },
       ),
     );
   }

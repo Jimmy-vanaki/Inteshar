@@ -1,56 +1,110 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/constants.dart';
-import 'package:Inteshar/app/core/utils/custom_loading.dart';
-import 'package:Inteshar/app/features/home/view/getX/company_slider_controller.dart';
+import 'package:inteshar/app/features/home/data/data_source/products_api_provider.dart';
+import 'package:inteshar/app/features/home/data/models/home_model.dart';
+import 'package:inteshar/app/features/home/view/getX/company_slider_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class CompanyListSlider extends StatelessWidget {
   const CompanyListSlider({
     super.key,
+    required this.companyList,
   });
-
+  final List<HomeModel> companyList;
   @override
   Widget build(BuildContext context) {
-    final pageNumberController = Get.put(CompanySliderController());
+    final CompanySliderController companySliderController =
+        Get.put(CompanySliderController());
+    final ProductsApiProvider productsApiProvider =
+        Get.find<ProductsApiProvider>(tag: 'random');
+
+// Define a modifiable list of maps
+    final List<Map<String, dynamic>> parsCompanyList = [
+      {
+        'title': 'الكل',
+        'id': -1,
+      },
+    ];
+
+// Iterate over the categories of the first company in companyList
+    for (var i = 0; i < companyList.first.companyCategories.length; i++) {
+      var category = companyList.first.companyCategories[i];
+
+      parsCompanyList.add({
+        'title': category.title, // Retrieve category title
+        'id': category.id, // Retrieve category id
+      });
+    }
+
     return SizedBox(
-      height: 80.0,
+      height: 50.0,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: 15,
+        itemCount: min(parsCompanyList.length, 10),
         itemBuilder: (BuildContext context, int index) => ZoomTapAnimation(
           onTap: () {
-            pageNumberController.currentCompany(index);
+            print(parsCompanyList[index]['id']);
+            companySliderController.selected.value = index - 1;
+            companySliderController.activeCompany.value =
+                parsCompanyList[index]['id'];
+            // companySliderController.currentCompany(
+            //   index,
+            // );
+            // productsApiProvider.fetchProducts(parsCompanyList[index]['id']);
           },
           child: Obx(
             () => AnimatedContainer(
               duration: const Duration(milliseconds: 100),
-              width: index == pageNumberController.selected.value ? 110 : 80,
-              height: 80,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               margin:
                   const EdgeInsets.only(left: 10, top: 2, bottom: 2, right: 2),
               clipBehavior: Clip.antiAlias,
-              decoration: Constants.intesharBoxDecoration(context).copyWith(borderRadius: BorderRadius.circular(200)),
+              decoration: BoxDecoration(
+                color: (index - 1) == companySliderController.selected.value
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.primary.withAlpha(40),
+                border: Border.all(
+                  color: (index - 1) == companySliderController.selected.value
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.surface,
+                ),
+                borderRadius: BorderRadius.circular(120),
+                // border: Border.all(
+                //   color: index == companySliderController.selected.value
+                //       ? Colors.black
+                //       : Theme.of(context).colorScheme.onPrimary,
+                // ),
+              ),
               child: Center(
-                child: CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  width:
-                      index == pageNumberController.selected.value ? 110 : 80,
-                  height: 80,
-                  imageUrl:
-                      "https://images.unsplash.com/ephoto-1728943492981-be3e94e4d551?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%)3D",
-                  placeholder: (context, url) => const CustomLoading(),
-                  errorWidget: (context, url, error) => Image.asset(
-                    'assets/images/not.jpg',
-                    fit: BoxFit.fill,
-                    width:
-                        index == pageNumberController.selected.value ? 110 : 80,
-                    height: 80,
+                child: Text(
+                  parsCompanyList[index]['title'],
+                  style: TextStyle(
+                    color: (index - 1) == companySliderController.selected.value
+                        ? Colors.black
+                        : Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
+                // child: CachedNetworkImage(
+                //   fit: BoxFit.cover,
+                //   width: index == companySliderController.selected.value
+                //       ? 120
+                //       : 80,
+                //   height: 80,
+                //   imageUrl: companyList.first.companies[index].logoUrl,
+                //   placeholder: (context, url) => const CustomLoading(),
+                //   errorWidget: (context, url, error) => Image.asset(
+                //     'assets/images/not.jpg',
+                //     fit: BoxFit.fill,
+                //     width: index == companySliderController.selected.value
+                //         ? 120
+                //         : 80,
+                //     height: 80,
+                //   ),
+                // ),
               ),
             ),
           ),

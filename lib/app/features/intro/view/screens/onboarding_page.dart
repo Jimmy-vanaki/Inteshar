@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/constants.dart';
-import 'package:Inteshar/app/core/routes/routes.dart';
-import 'package:Inteshar/app/features/intro/view/getX/onboarding_controller.dart';
-import 'package:Inteshar/app/features/intro/view/widgets/onborading_item.dart';
+import 'package:inteshar/app/config/constants.dart';
+import 'package:inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/features/intro/view/getX/onboarding_controller.dart';
+import 'package:inteshar/app/features/intro/view/widgets/onborading_item.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -21,22 +21,21 @@ class IntroPage extends StatelessWidget {
             onPageChanged: onBoardingController.animatedToPage,
             children: const [
               OnBoradingItem(
-                image: 'modern_design',
-                title: 'دعم فني متواصل',
-                description:
-                    'دعم فني متواصل على مدار الساعة، نضمن تواجدنا لمساعدتك في أي وقت تحتاج فيه إلى الدعم.',
+                image: 'cn-1',
+                title: 'تنوع',
+                description: 'آلاف نقاط البيع من جميع انحاء العراق!',
               ),
               OnBoradingItem(
-                image: 'performance_overview',
-                title: 'تغطية لمعظم المحافظات العراقية',
+                image: 'cn-2',
+                title: 'الاداء والسرعة',
                 description:
-                    'ننشط في اغلب المحافظات العراقية، نتميز بطاقم اداري متخصص وذو خبرة واسعة في هذا المجال.',
+                    'أداء ثابت وسرعة في عرض النتائج والبيانات، يتيح الحصول على نتائج بفترة قياسية.',
               ),
               OnBoradingItem(
-                image: 'my_notifications',
-                title: 'تنوع في عرض البطاقات والكروت',
+                image: 'cn-3',
+                title: 'سهولة الاستخدام',
                 description:
-                    'نظام متكامل لبيع وتسويق البطاقات الالكترونية المحلية والعالمية متخصصة في مجال بطاقات تعبئة الأرصدة لمختلف الشركات المحلية و العالمية.',
+                    'واجهة سهلة الاستخدام مع خدمات مميزة لطريقة العرض والتنقل بين الخدمات.',
               ),
             ],
           ),
@@ -46,7 +45,9 @@ class IntroPage extends StatelessWidget {
               onTap: () {
                 onBoardingController.goToPage(2);
               },
-              child: Text('يتخطى'),
+              child: const Text(
+                'تخطي',
+              ),
             ),
           ),
           Obx(
@@ -61,10 +62,10 @@ class IntroPage extends StatelessWidget {
                         radius: 10,
                         dotHeight: 8,
                         dotWidth: 8,
-                        activeDotColor: Theme.of(context).colorScheme.primary,
+                        activeDotColor: Theme.of(context).colorScheme.secondary,
                         dotColor: Theme.of(context)
                             .colorScheme
-                            .primary
+                            .secondary
                             .withAlpha(100),
                       ),
                     )
@@ -73,10 +74,11 @@ class IntroPage extends StatelessWidget {
                       width: (double.infinity),
                       child: ElevatedButton(
                         onPressed: () {
-                          Get.offAllNamed(Routes.welcomePage);
-                          Constants.localStorage.write('hasSeenOnboarding', true);
+                          Get.offAllNamed(Routes.home);
+                          Constants.localStorage
+                              .write('hasSeenOnboarding', true);
                         },
-                        child: Text('ابدأ'),
+                        child: const Text('ابدأ'),
                       ),
                     ),
             ),

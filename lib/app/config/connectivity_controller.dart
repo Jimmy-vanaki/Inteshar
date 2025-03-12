@@ -25,17 +25,6 @@ class ConnectivityController extends GetxController {
         _connectivity.onConnectivityChanged.listen(_handleConnectionChange);
   }
 
-  //Checking internet connection status
-  Future<void> _checkInternetConnectivity() async {
-    // Connectivity plus returns list of connections
-
-    List<ConnectivityResult> connections =
-        await _connectivity.checkConnectivity();
-
-    // Check connection with the avilable connected networks
-    _handleConnectionChange(connections);
-  }
-
   void _handleConnectionChange(List<ConnectivityResult> connections) {
     //none represent not connected to any network
     if (connections.contains(ConnectivityResult.none)) {
@@ -46,11 +35,11 @@ class ConnectivityController extends GetxController {
     } else if (connections.contains(ConnectivityResult.vpn)) {
       Get.snackbar(
         'VPN',
-        'VPNNNNNNNNNNNNNNNN',
-        colorText: Colors.green[300],
-        backgroundColor: Colors.green[50],
+        'اتصال VPN الخاص بك قد يتداخل مع أداء التطبيق.',
+        colorText: Colors.white,
+        backgroundColor: const Color.fromARGB(200, 212, 191, 0),
         duration: const Duration(seconds: 3),
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     } else {
       isConnected.value = true;
@@ -58,12 +47,12 @@ class ConnectivityController extends GetxController {
       _closeDialog();
       if (_isOnline) {
         Get.snackbar(
-          'Online',
-          'Welcome Back ',
+          'تم الاتصال بالانترنت',
+          'مرحبًا بعودتك',
           colorText: Colors.green[300],
           backgroundColor: Colors.green[50],
           duration: const Duration(seconds: 3),
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
         );
       }
     }
@@ -76,8 +65,8 @@ class ConnectivityController extends GetxController {
     _isOnline = true;
     Get.dialog(
       AlertDialog(
-        title: const Text('Offline'),
-        content: const Text('You are offline . connect  and try again'),
+        title: const Text('غير متصل بالإنترنت!'),
+        content: const Text('أنت غير متصل بالإنترنت. اتصل وحاول مرة أخرى'),
         actions: [
           SizedBox(
             height: 40,
@@ -88,10 +77,9 @@ class ConnectivityController extends GetxController {
                 _retryConnection();
               },
               child: const Text(
-                'Retry',
+                'أعد المحاولة',
                 style: TextStyle(
                   fontSize: 15,
-                  color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -118,12 +106,12 @@ class ConnectivityController extends GetxController {
       Get.back();
     } else {
       Get.snackbar(
-        'Offline',
-        'Check internet connection and try again',
+        'غير متصل بالإنترنت!',
+        'تحقق من اتصال الإنترنت وحاول مرة أخرى',
         colorText: Colors.red[300],
         backgroundColor: Colors.red[50],
         duration: const Duration(seconds: 3),
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     }
   }

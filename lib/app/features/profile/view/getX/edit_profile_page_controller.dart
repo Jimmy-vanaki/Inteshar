@@ -1,13 +1,42 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inteshar/app/features/home/data/data_source/home_api_provider.dart';
 
-class ImageController extends GetxController {
-  var networkImageUrl =
-      "https://images.unsplash.com/photo-1728943492981-be3e94e4d551?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%253D%25"
-          .obs;
+class EditProfilePageController extends GetxController {
+  final updateController = Get.find<HomeApiProvider>();
+  final RxBool isPasswordHidden = true.obs;
+  final RxBool isPasswordHiddenConfirm = true.obs;
+  RxString networkImageUrl = ''.obs;
   var pickedImageFile = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
+
+  final addressController = TextEditingController();
+  final mobileController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordConfirmController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (updateController.homeDataList.isNotEmpty) {
+      final user = updateController.homeDataList.first;
+      networkImageUrl.value = user.user?.photoUrl ?? '';
+    } else {
+      networkImageUrl = ''.obs;
+    }
+  }
+
+  @override
+  void onClose() {
+    addressController.dispose();
+    mobileController.dispose();
+    passwordController.dispose();
+    passwordConfirmController.dispose();
+    super.onClose();
+  }
 
   // Method to pick image from gallery
   Future<void> pickImage() async {
@@ -20,5 +49,15 @@ class ImageController extends GetxController {
   // Method to reset to network image
   void resetToNetworkImage() {
     pickedImageFile.value = null;
+  }
+
+  // متد تبدیل تصویر به Base64
+  String? convertImageToBase64() {
+    final imageFile = pickedImageFile.value;
+    if (imageFile != null) {
+      final bytes = imageFile.readAsBytesSync();
+      return base64Encode(bytes);
+    }
+    return null;
   }
 }

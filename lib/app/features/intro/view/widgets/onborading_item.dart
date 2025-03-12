@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:delayed_widget/delayed_widget.dart';
@@ -20,6 +19,14 @@ class OnBoradingItem extends StatelessWidget {
       height: Get.height,
       width: Get.width,
       padding: const EdgeInsets.all(50),
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            "assets/images/intro/bg-p2.jpg",
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -27,12 +34,12 @@ class OnBoradingItem extends StatelessWidget {
             delayDuration: const Duration(milliseconds: 200),
             animationDuration: const Duration(seconds: 1),
             animation: DelayedAnimations.SLIDE_FROM_BOTTOM,
-            child: SvgPicture.asset(
-              'assets/svgs/intro/$image.svg',
-              height: Get.height * 0.4,
-              width: Get.width * 0.5,
+            child: Image.asset(
+              'assets/images/intro/$image.png',
+              fit: BoxFit.fill,
             ),
           ),
+          const Gap(20),
           DelayedWidget(
             delayDuration: const Duration(milliseconds: 400),
             animationDuration: const Duration(seconds: 1),
@@ -42,14 +49,14 @@ class OnBoradingItem extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
+                    fontSize: 16,
                   ),
                 ),
                 const Gap(20),
                 Text(
                   description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.primary.withAlpha(150),
+                  style: const TextStyle(
+                    fontSize: 14,
                   ),
                   textAlign: TextAlign.center,
                 ),

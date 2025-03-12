@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "619912950018",
+    "firebase_url": "https://inteshar-6c8d9.firebaseio.com",
+    "project_id": "inteshar-6c8d9",
+    "storage_bucket": "inteshar-6c8d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619912950018:android:f5df5497632272a3bd121b",
+        "android_client_info": {
+          "package_name": "com.dijlah.inteshar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "619912950018-pk4krbvf1rblpctl979cm5d5cavjh2in.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbEUMc0_mOpU_BQmuEhjPZPQZANb1kErA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "619912950018-pk4krbvf1rblpctl979cm5d5cavjh2in.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

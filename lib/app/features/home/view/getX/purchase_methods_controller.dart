@@ -3,23 +3,33 @@ import 'package:get/get.dart';
 
 class PurchaseMethodsController extends GetxController {
   RxInt purchaseMethodsSelected = (-1).obs;
-
-  selectMethod({required int index}) {
-    purchaseMethodsSelected.value = index;
-  }
-
   FixedExtentScrollController fixedExtentScrollController =
       FixedExtentScrollController();
-  RxInt selected = 0.obs;
+  RxInt counter = 0.obs;
+  RxBool hasGlobalCard = false.obs;
+  RxInt isButtonDisabled = 0.obs;
+  List<Map<String, dynamic>> get purchaseMethodsList {
+    return [
+      {"message": 'طباعة', "icon": 'print', "type": 'print'},
+      {"message": 'مشاركة', "icon": 'share-square', "type": 'share'},
+      {"message": 'ارسال صورة', "icon": 'file-image', "type": 'sendImage'},
+      {"message": 'نسخ', "icon": 'copy-alt', "type": 'copy'},
+      // {"message": 'رسالة نصية', "icon": 'comment-sms', "type": 'sms'}
+    ];
+  }
 
   @override
   void onInit() {
     fixedExtentScrollController =
-        FixedExtentScrollController(initialItem: selected.value);
+        FixedExtentScrollController(initialItem: counter.value);
     fixedExtentScrollController.jumpToItem(
-      selected.value,
+      counter.value,
     );
     super.onInit();
+  }
+
+  selectMethod({required int index}) {
+    purchaseMethodsSelected.value = index;
   }
 
   @override

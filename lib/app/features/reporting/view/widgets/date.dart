@@ -2,7 +2,10 @@ import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:Inteshar/app/config/constants.dart';
+import 'package:get/get.dart';
+import 'package:inteshar/app/config/constants.dart';
+import 'package:intl/intl.dart' as intl;
+import '../getX/report_value_controller.dart';
 
 class ReportingDate extends StatelessWidget {
   const ReportingDate({
@@ -11,6 +14,8 @@ class ReportingDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ReportValueController reportValueController =
+        Get.put(ReportValueController());
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -19,54 +24,62 @@ class ReportingDate extends StatelessWidget {
           width: 20,
           height: 20,
           colorFilter: ColorFilter.mode(
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.onPrimary,
             BlendMode.srcIn,
           ),
         ),
         const Gap(5),
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           decoration: Constants.intesharBoxDecoration(context).copyWith(
             border: Border(
               right: BorderSide(
-                color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                color: Theme.of(context).colorScheme.secondary,
                 width: 8,
               ),
             ),
+            color: Theme.of(context).colorScheme.primary,
           ),
-          child: InkWell(
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    BoardDateFormat('yyyy/MM/dd').format(DateTime.now()),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+          child: Obx(
+            () {
+              return InkWell(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        reportValueController.startDate.value,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Gap(10),
+                    SvgPicture.asset(
+                      'assets/svgs/angle-small-down.svg',
+                      width: 15,
+                      height: 15,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.onPrimary,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ],
                 ),
-                const Gap(10),
-                SvgPicture.asset(
-                  'assets/svgs/angle-small-down.svg',
-                  width: 15,
-                  height: 15,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.primary,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () async {
-              await showBoardDateTimePicker(
-                context: context,
-                pickerType: DateTimePickerType.date,
-                options: const BoardDateTimeOptions(
-                  showDateButton: false,
-                  pickerFormat: PickerFormat.ymd,
-                  boardTitle: 'حدد التاريخ المطلوب',
-                ),
+                onTap: () async {
+                  final startDate = await showBoardDateTimePicker(
+                    context: context,
+                    pickerType: DateTimePickerType.date,
+                    options: const BoardDateTimeOptions(
+                      showDateButton: false,
+                      pickerFormat: PickerFormat.ymd,
+                      boardTitle: 'حدد التاريخ المطلوب',
+                    ),
+                  );
+
+                  reportValueController.startDate.value =
+                      intl.DateFormat("yyyy-MM-dd").format(startDate!);
+                },
               );
             },
           ),
@@ -74,54 +87,57 @@ class ReportingDate extends StatelessWidget {
         const Gap(5),
         const Text('الی'),
         const Gap(5),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-          decoration: Constants.intesharBoxDecoration(context).copyWith(
-            color: Theme.of(context).colorScheme.onPrimary,
-            border: Border(
-              right: BorderSide(
-                color: Theme.of(context).colorScheme.primary.withAlpha(50),
-                width: 8,
+        Obx(() => Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              decoration: Constants.intesharBoxDecoration(context).copyWith(
+                border: Border(
+                  right: BorderSide(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 8,
+                  ),
+                ),
+                color: Theme.of(context).colorScheme.primary,
               ),
-            ),
-          ),
-          child: InkWell(
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    BoardDateFormat('yyyy/MM/dd').format(DateTime.now()),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+              child: InkWell(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        reportValueController.endDate.value,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Gap(10),
+                    SvgPicture.asset(
+                      'assets/svgs/angle-small-down.svg',
+                      width: 15,
+                      height: 15,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.onPrimary,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ],
                 ),
-                const Gap(10),
-                SvgPicture.asset(
-                  'assets/svgs/angle-small-down.svg',
-                  width: 15,
-                  height: 15,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.primary,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () async {
-              await showBoardDateTimePicker(
-                context: context,
-                pickerType: DateTimePickerType.date,
-                options: const BoardDateTimeOptions(
-                  showDateButton: false,
-                  pickerFormat: PickerFormat.ymd,
-                  boardTitle: 'حدد التاريخ المطلوب',
-                ),
-              );
-            },
-          ),
-        ),
+                onTap: () async {
+                  final endDate = await showBoardDateTimePicker(
+                    context: context,
+                    pickerType: DateTimePickerType.date,
+                    options: const BoardDateTimeOptions(
+                      showDateButton: false,
+                      pickerFormat: PickerFormat.ymd,
+                      boardTitle: 'حدد التاريخ المطلوب',
+                    ),
+                  );
+
+                  reportValueController.endDate.value =
+                      intl.DateFormat("yyyy-MM-dd").format(endDate!);
+                },
+              ),
+            )),
       ],
     );
   }

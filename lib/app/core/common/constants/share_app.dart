@@ -5,8 +5,8 @@ import 'package:share_plus/share_plus.dart';
 
 void shareApp(BuildContext context) {
   String appLink = Platform.isAndroid
-      ? 'https://play.google.com/store/apps/details?id=com.dijlah.alintesharco'
-      : 'https://apps.apple.com/app/alinteshar/id1579161980';
+      ? 'https://play.google.com/store/apps/details?id=com.dijlah.inteshar'
+      : 'https://apps.apple.com/app/alshams/id1579161980';
 
   final RenderBox box = context.findRenderObject() as RenderBox;
   Share.share(

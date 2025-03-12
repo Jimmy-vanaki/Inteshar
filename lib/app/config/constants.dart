@@ -3,11 +3,16 @@ import 'package:get_storage/get_storage.dart';
 
 class Constants {
   static const String appTitle = 'inteshar';
-  static const String baseUrl = "https://alinteshar-co.net/api/v5/";
+  static const String baseUrl = "http://inteshar.net/api/v4";
+
   static final GetStorage localStorage = GetStorage();
+  static String userToken = '';
+  static String fcmToken = '';
+
+  static bool isLoggedIn = false;
   static BoxDecoration intesharBoxDecoration(BuildContext context) =>
       BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
+        color: Colors.white,
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,

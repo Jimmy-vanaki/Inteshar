@@ -9,11 +9,9 @@ class CustomLoading extends StatelessWidget {
   final Color? color;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: LoadingAnimationWidget.threeArchedCircle(
-        size: 20,
-        color: color ?? Theme.of(context).colorScheme.primary,
-      ),
+    return LoadingAnimationWidget.threeArchedCircle(
+      size: 20,
+      color: color ?? Theme.of(context).colorScheme.onPrimary,
     );
   }
 }

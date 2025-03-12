@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/constants.dart';
-import 'package:Inteshar/app/core/routes/routes.dart';
-import 'package:Inteshar/app/core/utils/custom_loading.dart';
+import 'package:inteshar/app/config/constants.dart';
+import 'package:inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/core/utils/custom_loading.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -37,7 +37,7 @@ class SplashPage extends StatelessWidget {
               ),
             ),
             Image.asset(
-              'assets/images/splash-cn.png',
+              'assets/images/logo-1.png',
               fit: BoxFit.fill,
             ),
             Positioned(
@@ -49,7 +49,7 @@ class SplashPage extends StatelessWidget {
                   Text(
                     'يرجى الانتظار...',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ],

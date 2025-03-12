@@ -2,9 +2,8 @@ import 'package:auto_height_grid_view/auto_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/config/connectivity_controller.dart';
-import 'package:Inteshar/app/config/constants.dart';
-import 'package:Inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/features/services/view/screens/invoice_page.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class OtherServices extends StatelessWidget {
@@ -17,14 +16,18 @@ class OtherServices extends StatelessWidget {
         "title": 'TopUp',
         "icon": 'point-of-sale-bill',
         "onTap": () {
-          Get.toNamed(Routes.invoicePage);
+          Get.toNamed(Routes.invoicePage,
+              arguments: const InvoicePage(type: 'topup', title: 'TOPUP'));
         },
       },
       {
         "title": 'فاتورة',
         "icon": 'digital-payment',
         "onTap": () {
-          Get.toNamed(Routes.invoicePage);
+          // Get.toNamed(Routes.invoicePage,
+          //     arguments: const InvoicePage(type: 'bill', title: 'فاتورة'));
+
+          Get.snackbar('تنبيه', 'الخدمة المطلوبة غير مفعلة حاليا');
         },
       },
       {
@@ -48,8 +51,13 @@ class OtherServices extends StatelessWidget {
           onTap: otherServicesList[index]['onTap'],
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration: Constants.intesharBoxDecoration(context)
-                .copyWith(color: Theme.of(context).colorScheme.primary),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withAlpha(40),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Theme.of(context).colorScheme.surface,
+              ),
+            ),
             height: 100,
             child: Column(
               children: [
@@ -68,7 +76,7 @@ class OtherServices extends StatelessWidget {
                   otherServicesList[index]['title'],
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],

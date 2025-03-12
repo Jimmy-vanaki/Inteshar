@@ -2,78 +2,62 @@ import 'package:flutter/material.dart';
 
 class DashedBorder extends StatelessWidget {
   final Widget child;
-
-  const DashedBorder({super.key, required this.child});
+  final Color? color;
+  const DashedBorder({
+    super.key,
+    required this.child,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter:
-          DashedBorderPainter(color: Theme.of(context).colorScheme.primary),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: child,
+      painter: DashedBorderPainter(
+        color: color ?? Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(5),
       ),
+      child: child,
     );
   }
 }
 
 class DashedBorderPainter extends CustomPainter {
   final Color color;
+  final BorderRadius borderRadius;
 
-  DashedBorderPainter({required this.color});
+  DashedBorderPainter({
+    required this.color,
+    this.borderRadius = BorderRadius.zero,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
-      ..strokeWidth = 2
+      ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
 
-    const dashWidth = 5;
-    const dashSpace = 3;
-    double startX = 0;
+    const dashWidth = 5.0;
+    const dashSpace = 5.0;
 
-    while (startX < size.width) {
-      canvas.drawLine(
-        Offset(startX, 0),
-        Offset(startX + dashWidth, 0),
-        paint,
-      );
-      startX += dashWidth + dashSpace;
-    }
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final rRect = borderRadius.toRRect(rect);
+    final path = Path()..addRRect(rRect);
 
-    double startY = 0;
-    while (startY < size.height) {
-      canvas.drawLine(
-        Offset(size.width, startY),
-        Offset(size.width, startY + dashWidth),
-        paint,
-      );
-      startY += dashWidth + dashSpace;
-    }
-
-    startX = size.width;
-    while (startX > 0) {
-      canvas.drawLine(
-        Offset(startX, size.height),
-        Offset(startX - dashWidth, size.height),
-        paint,
-      );
-      startX -= dashWidth + dashSpace;
-    }
-
-    startY = size.height;
-    while (startY > 0) {
-      canvas.drawLine(
-        Offset(0, startY),
-        Offset(0, startY - dashWidth),
-        paint,
-      );
-      startY -= dashWidth + dashSpace;
+    final pathMetrics = path.computeMetrics();
+    for (final metric in pathMetrics) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final segment = metric.extractPath(
+          distance,
+          distance + dashWidth,
+        );
+        canvas.drawPath(segment, paint);
+        distance += dashWidth + dashSpace;
+      }
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

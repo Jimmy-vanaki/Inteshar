@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/core/extensions/success_color_theme.dart';
+import 'package:inteshar/app/config/status.dart';
+import 'package:inteshar/app/core/extensions/success_color_theme.dart';
+import 'package:inteshar/app/core/utils/custom_loading.dart';
+import 'package:inteshar/app/features/services/data/data_source/service_api_provider.dart';
 
-Future<dynamic> invoiceModalConfirm(BuildContext context) {
+Future<dynamic> invoiceModalConfirm({
+  required BuildContext context,
+  required String phone,
+  required String price,
+  required String category,
+  required String categoryId,
+  required String type,
+}) {
+  ServiceApiProvider serviceApiProvider = Get.put(ServiceApiProvider());
+
   return showModalBottomSheet(
     isScrollControlled: true,
     showDragHandle: true,
-    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+    backgroundColor: Theme.of(context).colorScheme.primary,
     context: context,
     builder: (context) {
       return Container(
@@ -20,30 +32,30 @@ Future<dynamic> invoiceModalConfirm(BuildContext context) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'رقم الهاتف :',
                   style: TextStyle(
                     fontSize: 14,
                   ),
                 ),
                 Text(
-                  '09107722188',
-                  style: TextStyle(
+                  phone,
+                  style: const TextStyle(
                       fontSize: 16,
                       letterSpacing: 1.2,
                       fontWeight: FontWeight.w700),
                 ),
               ],
             ),
-          
             const Gap(25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('الفئة :'),
+                const Text('الفئة :'),
                 Text(
-                  '20,000 IQD',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  price,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -51,10 +63,12 @@ Future<dynamic> invoiceModalConfirm(BuildContext context) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('السعر :'),
+                const Text('السعر :'),
                 Text(
-                  'Monthly',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  category,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w700),
+                  textDirection: TextDirection.ltr,
                 ),
               ],
             ),
@@ -67,20 +81,63 @@ Future<dynamic> invoiceModalConfirm(BuildContext context) {
                       .extension<SuccessColorTheme>()
                       ?.successColor),
                 ),
-                onPressed: () {},
-                child: Text(
-                  'تأكيد',
-                  style: TextStyle(
-                    color: Theme.of(context)
-                        .extension<SuccessColorTheme>()
-                        ?.onSuccessColor,
-                  ),
-                ),
+                onPressed: () {
+                  serviceApiProvider.fetchTransaction(
+                    phone: phone,
+                    categoryId: categoryId,
+                    type: type,
+                    price: price,
+                    category: category,
+                  );
+                },
+                child: Obx(() {
+                  final requestStatus =
+                      serviceApiProvider.rxRequestStatus.value;
+
+                  switch (requestStatus) {
+                    case Status.loading:
+                      return const Center(child: CustomLoading());
+
+                    case Status.error:
+                      return Text(
+                        serviceApiProvider.errorMessage.value,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+
+                    case Status.initial:
+                      return Text(
+                        'تأكيد',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .extension<SuccessColorTheme>()
+                              ?.onSuccessColor,
+                        ),
+                      );
+
+                    case Status.completed:
+                    default:
+                      return Text(
+                        'تأكيد',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .extension<SuccessColorTheme>()
+                              ?.onSuccessColor,
+                        ),
+                      );
+                  }
+                }),
               ),
             ),
           ],
         ),
       );
+    },
+  ).whenComplete(
+    () {
+      FocusScope.of(context).unfocus();
+      Get.delete<ServiceApiProvider>();
     },
   );
 }

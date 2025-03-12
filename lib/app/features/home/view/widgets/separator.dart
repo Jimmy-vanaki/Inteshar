@@ -18,9 +18,29 @@ class Separator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
+          Row(
+            children: [
+              SvgPicture.asset(
+                'assets/svgs/bullet.svg',
+                width: 13,
+                height: 13,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.secondary,
+                  BlendMode.srcIn,
+                ),
+              ),
+              Text(
+                title,
+              ),
+            ],
           ),
+          // Expanded(
+          //   child: Divider(
+          //     endIndent: 10,
+          //     indent: 10,
+          //     color: Theme.of(context).colorScheme.secondary,
+          //   ),
+          // ),
           if (ontap != null)
             Row(
               children: [
@@ -29,8 +49,8 @@ class Separator extends StatelessWidget {
                   child: Text(
                     'المزيد',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.w700),
                   ),
                 ),
                 const Gap(2),
@@ -39,7 +59,7 @@ class Separator extends StatelessWidget {
                   width: 13,
                   height: 13,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.secondary,
                     BlendMode.srcIn,
                   ),
                 ),

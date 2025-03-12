@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:Inteshar/app/core/routes/routes.dart';
-import 'package:Inteshar/app/features/page_view/view/getX/scaffold_controller.dart';
+import 'package:inteshar/app/core/routes/routes.dart';
+import 'package:inteshar/app/features/page_view/view/getX/scaffold_controller.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 AppBar customAppBar(BuildContext context , ScaffoldController controller) {
