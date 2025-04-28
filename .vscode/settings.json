@@ -6,7 +6,7 @@
     },
     "CodeGPT.apiKey": "CodeGPT Plus Beta",
     "java.configuration.updateBuildConfiguration": "automatic",
-    "cmake.sourceDirectory": "D:/Work/Flutter-Projects/shams/shams/linux",
+    "cmake.sourceDirectory": "D:/Work/Flutter-Projects/inteshar/inteshar/linux",
     "terminal.integrated.env.windows": {
         "PATH": "C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\bin;${env:PATH}"
     }

@@ -40,7 +40,7 @@ class InternalPage extends StatelessWidget {
               ),
               height: 190,
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 45),
               alignment: Alignment.topCenter,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,18 +74,21 @@ class InternalPage extends StatelessWidget {
                       : const SizedBox.shrink(),
                   const Gap(20),
                   canBack ?? true
-                      ? ZoomTapAnimation(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: SvgPicture.asset(
-                            'assets/svgs/angle-left.svg',
-                            colorFilter: ColorFilter.mode(
-                              Theme.of(context).colorScheme.onPrimary,
-                              BlendMode.srcIn,
+                      ? Container(
+                          padding: EdgeInsets.all(10),
+                          child: ZoomTapAnimation(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: SvgPicture.asset(
+                              'assets/svgs/angle-left.svg',
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onPrimary,
+                                BlendMode.srcIn,
+                              ),
+                              width: 20,
+                              height: 20,
                             ),
-                            width: 20,
-                            height: 20,
                           ),
                         )
                       : const SizedBox.shrink(),

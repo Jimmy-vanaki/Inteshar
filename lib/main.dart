@@ -16,7 +16,12 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await init();
-  await checkGooglePlayServices();
+  try {
+    await checkGooglePlayServices().timeout(const Duration(seconds: 10));
+  } catch (e) {
+    debugPrint('Timeout: Google Play Services check took too long, skipping.');
+  }
+
   runApp(const MyApp());
 
   FlutterNativeSplash.remove();

@@ -99,18 +99,46 @@ class UserOperation extends StatelessWidget {
                                     ),
                                     buildRowWithGap(
                                         "رصيدك السابق:",
-                                        formatNumber(operation.inventory! -
-                                                (operation.deposit ??
-                                                    operation.userPrice ??
-                                                    operation.agentPrice ??
-                                                    operation
-                                                        .parentAgentPrice ??
-                                                    operation.categoryPrice ??
-                                                    0)) ??
-                                            ''),
+                                        getOperationType(operation) ==
+                                                "تحويل رصيد"
+                                            // If operation type is "Transfer Balance", subtract the total amount * numCount from inventory
+                                            ? formatNumber(operation
+                                                        .inventory! -
+                                                    ((operation
+                                                                .deposit ??
+                                                            operation
+                                                                .userPrice ??
+                                                            operation
+                                                                .agentPrice ??
+                                                            operation
+                                                                .parentAgentPrice ??
+                                                            operation
+                                                                .categoryPrice ??
+                                                            0) *
+                                                        (operation
+                                                                .numCount ??
+                                                            1))) ??
+                                                ''
+                                            // Otherwise, add the total amount * numCount to inventory
+                                            : formatNumber(operation
+                                                        .inventory! +
+                                                    ((operation
+                                                                .deposit ??
+                                                            operation
+                                                                .userPrice ??
+                                                            operation
+                                                                .agentPrice ??
+                                                            operation
+                                                                .parentAgentPrice ??
+                                                            operation
+                                                                .categoryPrice ??
+                                                            0) *
+                                                        (operation.numCount ??
+                                                            1))) ??
+                                                ''),
                                     buildRowWithGap(
                                         "رصيدك الحالي : ",
-                                        formatNumber(operation.inventory) ??
+                                        formatNumber(operation.inventory!) ??
                                             ''),
                                     const Gap(10),
                                     Align(

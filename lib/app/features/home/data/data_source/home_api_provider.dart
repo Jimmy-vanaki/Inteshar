@@ -18,6 +18,9 @@ class HomeApiProvider extends GetxController {
     super.onInit();
     dio = Dio(BaseOptions(
       receiveTimeout: const Duration(milliseconds: 20000),
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ));
     if (Constants.userToken.isNotEmpty) {
       Constants.isLoggedIn = true;
@@ -54,7 +57,9 @@ class HomeApiProvider extends GetxController {
           );
         }
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
+      } else if (response.statusCode == 400) {
+        handleLogout('يرجى تسجيل الدخول مرة أخرى');
       } else {
         rxRequestStatus.value = Status.error;
         Get.closeAllSnackbars();

@@ -25,11 +25,13 @@ class InvoicePage extends StatelessWidget {
   Widget build(BuildContext context) {
     InvoiceController invoiceController = Get.put(InvoiceController());
     final homeApiProvider = Get.find<HomeApiProvider>();
-    final List<dynamic> shortcutList = homeApiProvider
+    final List<AsiacellCategory> shortcutList = homeApiProvider
         .homeDataList.first.asiacellCategories!
         .where((category) => category.type == Type.TOPUP)
-        .map((category) => category.toJson())
         .toList();
+
+    shortcutList.sort((a, b) => a.idShow!.compareTo(b.idShow ?? 0));
+
     final formKey = GlobalKey<FormState>();
     return InternalPage(
       title: title,
@@ -101,8 +103,8 @@ class InvoicePage extends StatelessWidget {
                       builder: (context, index) {
                         return ZoomTapAnimation(
                           onTap: () {
-                            int position = shortcutList.indexWhere((item) =>
-                                item['id'] == shortcutList[index]['id']);
+                            int position = shortcutList.indexWhere(
+                                (item) => item.id == shortcutList[index].id);
                             invoiceController.goToItem(position);
                           },
                           child: Obx(
@@ -133,8 +135,7 @@ class InvoicePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    formatNumber(
-                                            shortcutList[index]['price']) ??
+                                    formatNumber(shortcutList[index].price) ??
                                         '',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -260,7 +261,7 @@ class InvoicePage extends StatelessWidget {
                                               ),
                                               child: Text(
                                                 formatNumber(shortcutList[index]
-                                                        ['price']) ??
+                                                        .price) ??
                                                     '',
                                                 style: TextStyle(
                                                   fontSize: index ==
@@ -348,11 +349,13 @@ class InvoicePage extends StatelessWidget {
                         onPressed: () {
                           final agentPrice =
                               shortcutList[invoiceController.selected.value]
-                                      ?['agent_price']?['price'] ??
+                                      .price ??
                                   0;
+
+                          0;
                           final packagePrice =
                               shortcutList[invoiceController.selected.value]
-                                  ['price'];
+                                  .price;
                           if (formKey.currentState!.validate() &&
                               invoiceController
                                   .phoneController.text.isNotEmpty) {
@@ -365,11 +368,11 @@ class InvoicePage extends StatelessWidget {
                                   '${formatNumber(agentPrice != 0 ? agentPrice : packagePrice)} IQD',
                               price:
                                   shortcutList[invoiceController.selected.value]
-                                          ['price']
+                                      .price
                                       .toString(),
                               categoryId:
                                   shortcutList[invoiceController.selected.value]
-                                          ['id']
+                                      .id
                                       .toString(),
                               type: type,
                             );

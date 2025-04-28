@@ -66,7 +66,7 @@ class Datum {
         companyTitle: json["company_title"] != null
             ? companyTitleValues.map[json["company_title"]]
             : null,
-        numCount: json["num_count"] ?? 0,
+        numCount: json["num_count"],
         inventory: json["inventory"] ?? 0,
         serialCount: json["serial_count"] ?? 0,
         printDate: json["print_date"] != null
@@ -89,7 +89,7 @@ class Datum {
         "company_title": companyTitle != null
             ? companyTitleValues.reverse[companyTitle]
             : "",
-        "num_count": numCount ?? 0,
+        "num_count": numCount,
         "inventory": inventory ?? 0,
         "serial_count": serialCount ?? 0,
         "print_date": printDate?.toIso8601String() ?? "",

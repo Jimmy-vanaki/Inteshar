@@ -10,7 +10,6 @@ import 'package:inteshar/app/core/common/widgets/retry_widget.dart';
 import 'package:inteshar/app/core/utils/custom_loading.dart';
 import 'package:inteshar/app/features/home/data/data_source/products_api_provider.dart';
 import 'package:inteshar/app/features/home/view/getX/company_archive_controller.dart';
-import 'package:inteshar/app/features/reporting/data/data_source/re_print_api_provider.dart';
 import 'package:inteshar/app/features/reporting/data/data_source/report_list_api_provider.dart';
 import 'package:inteshar/app/features/reporting/view/getX/report_value_controller.dart';
 import 'package:inteshar/app/features/reporting/view/widgets/category_dropdown.dart';
@@ -23,7 +22,6 @@ class ReportingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     ReportListApiProvider reportListApiProvider =
         Get.put(ReportListApiProvider());
-    RePrintApiProvider rePrintApiProvider = Get.put(RePrintApiProvider());
     ReportValueController reportValueController =
         Get.put(ReportValueController());
     final CompanyArchiveController companyArchiveController =
@@ -113,9 +111,6 @@ class ReportingPage extends StatelessWidget {
                                           .selectedProduct.value = id ?? '0';
                                     },
                                   );
-                                default:
-                                  return const Center(
-                                      child: Text('Unknown state'));
                               }
                             }),
                           ],
@@ -128,7 +123,8 @@ class ReportingPage extends StatelessWidget {
                                     Status.loading
                                 ? null
                                 : () {
-                                    rePrintApiProvider.reportPrint.value = true;
+                                    reportValueController.reportPrint.value =
+                                        true;
                                     reportListApiProvider.fetchReportData(
                                       productId: reportValueController
                                           .selectedProduct.value,

@@ -16,7 +16,8 @@ Future<dynamic> internetModalConfirm({
 }) {
   final formKey = GlobalKey<FormState>();
   ServiceApiProvider serviceApiProvider = Get.put(ServiceApiProvider());
-  final TextEditingController phoneController = TextEditingController(text: '');
+  final TextEditingController phoneController =
+      TextEditingController(text: '77');
   return showModalBottomSheet(
     isScrollControlled: true,
     showDragHandle: true,
@@ -108,62 +109,46 @@ Future<dynamic> internetModalConfirm({
               const Spacer(),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Theme.of(context)
-                        .extension<SuccessColorTheme>()
-                        ?.successColor),
-                  ),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      serviceApiProvider.fetchTransaction(
-                        phone: phoneController.text,
-                        categoryId: categoryId,
-                        type: type,
-                        price: price,
-                        category: category,
-                      );
-                    }
-                  },
-                  child: Obx(() {
-                    final requestStatus =
-                        serviceApiProvider.rxRequestStatus.value;
+                child: Obx(() {
+                  final requestStatus =
+                      serviceApiProvider.rxRequestStatus.value;
+                  final isLoading = requestStatus == Status.loading;
 
-                    switch (requestStatus) {
-                      case Status.loading:
-                        return const Center(child: CustomLoading());
-
-                      case Status.error:
-                        return Text(
-                          serviceApiProvider.errorMessage.value,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                  return ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context)
+                            .extension<SuccessColorTheme>()
+                            ?.successColor,
+                      ),
+                    ),
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            if (formKey.currentState!.validate()) {
+                              serviceApiProvider.fetchTransaction(
+                                phone: phoneController.text,
+                                categoryId: categoryId,
+                                type: type,
+                                price: category,
+                                category: price,
+                                context: context,
+                                title: 'الباقات',
+                              );
+                            }
+                          },
+                    child: isLoading
+                        ? const Center(child: CustomLoading())
+                        : Text(
+                            'تأكيد',
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .extension<SuccessColorTheme>()
+                                  ?.onSuccessColor,
+                            ),
                           ),
-                        );
-
-                      case Status.initial:
-                        return Text(
-                          'تأكيد',
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .extension<SuccessColorTheme>()
-                                ?.onSuccessColor,
-                          ),
-                        );
-
-                      case Status.completed:
-                      default:
-                        return Text(
-                          'تأكيد',
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .extension<SuccessColorTheme>()
-                                ?.onSuccessColor,
-                          ),
-                        );
-                    }
-                  }),
-                ),
+                  );
+                }),
               ),
             ],
           ),

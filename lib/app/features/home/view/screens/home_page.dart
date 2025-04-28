@@ -131,29 +131,11 @@ class HomePage extends StatelessWidget {
                         'assets/images/cr-main.png',
                         width: Get.width,
                         height: 190,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 170,
-                  //   child: Container(
-                  //     width: 80,
-                  //     height: 80,
-                  //     decoration: BoxDecoration(
-                  //       color: Theme.of(context).colorScheme.surface,
-                  //       border: Border.all(color: Colors.white, width: 3),
-                  //       shape: BoxShape.circle,
-                  //     ),
-                  //     // padding: const EdgeInsets.all(15),
-                  //     alignment: Alignment.center,
-                  //     child: Image.asset(
-                  //       'assets/images/logo-1.png',
-                  //       width: 60,
-                  //       height: 60,
-                  //     ),
-                  //   ),
-                  // ),
+                  
                   Positioned(
                     top: 40,
                     child: SizedBox(

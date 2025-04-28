@@ -55,7 +55,7 @@ class CardPriceApi extends GetxController {
         cardPriceData.clear();
         cardPriceData.add(CardPriceModel.fromJson(response.data));
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {
           exitDialog(response.data['errors'][0]);

@@ -15,6 +15,9 @@ class OperationApiProvider extends GetxController {
     super.onInit();
     dio = Dio(BaseOptions(
       receiveTimeout: const Duration(milliseconds: 10000),
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ));
     fetchOperationData();
   }
@@ -37,7 +40,7 @@ class OperationApiProvider extends GetxController {
         operationDataList.clear();
         operationDataList.add(OperationModel.fromJson(response.data));
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {
           exitDialog(response.data['errors'][0]);

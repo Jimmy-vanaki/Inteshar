@@ -48,7 +48,7 @@ class ReportListApiProvider extends GetxController {
           },
         ),
       );
-
+      print('response.statusCode :===> ${response.statusCode}');
       if (response.statusCode == 200) {
         reportDataList.clear();
         reportDataList.add(ReportModel.fromJson(response.data));
@@ -56,7 +56,7 @@ class ReportListApiProvider extends GetxController {
         await Future.delayed(const Duration(seconds: 2));
         rxRequestButtonStatus.value = Status.completed;
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         // rxRequestStatus.value = Status.error;
         // Get.closeAllSnackbars();

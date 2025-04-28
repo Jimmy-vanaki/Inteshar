@@ -55,7 +55,7 @@ class TopupReportApiProvider extends GetxController {
         await Future.delayed(const Duration(seconds: 2));
         rxRequestButtonStatus.value = Status.completed;
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {
           rxRequestStatus.value = Status.completed;

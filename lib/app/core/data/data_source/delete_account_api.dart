@@ -30,7 +30,7 @@ Future<void> deleteAccount() async {
       Get.snackbar('تنبيه', 'تم تسجيل الخروج بنجاح');
       Get.offAllNamed(Routes.welcomePage);
     } else if (response.statusCode == 401) {
-      handleLogout(response.data['error']['message']);
+      handleLogout(response.data['error']);
     } else {
       if ((response.data?['logged_in'] ?? 1) == 0) {
         exitDialog(response.data['errors'][0]);

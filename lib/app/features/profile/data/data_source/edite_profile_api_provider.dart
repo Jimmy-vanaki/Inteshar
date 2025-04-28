@@ -61,7 +61,7 @@ class EditeProfileApiProvider extends GetxController {
         final HomeApiProvider updateController = Get.find<HomeApiProvider>();
         await updateController.fetchHomeData();
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {
           rxRequestStatus.value = Status.error;

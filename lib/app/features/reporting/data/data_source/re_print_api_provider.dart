@@ -10,7 +10,7 @@ class RePrintApiProvider extends GetxController {
   var rePrintDataList = <RePrintModel>[].obs;
   late Dio dio;
   final rxRequestStatus = Status.initial.obs;
-  final RxBool reportPrint = false.obs;
+  
 
   @override
   void onInit() {
@@ -53,7 +53,7 @@ class RePrintApiProvider extends GetxController {
 
         return true;
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
         return false;
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {

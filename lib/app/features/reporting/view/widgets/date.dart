@@ -71,6 +71,8 @@ class ReportingDate extends StatelessWidget {
                     context: context,
                     pickerType: DateTimePickerType.date,
                     options: const BoardDateTimeOptions(
+                      activeColor: Colors.transparent,
+                      activeTextColor: Colors.black,
                       showDateButton: false,
                       pickerFormat: PickerFormat.ymd,
                       boardTitle: 'حدد التاريخ المطلوب',
@@ -127,6 +129,8 @@ class ReportingDate extends StatelessWidget {
                     context: context,
                     pickerType: DateTimePickerType.date,
                     options: const BoardDateTimeOptions(
+                      activeColor: Colors.transparent,
+                      activeTextColor: Colors.black,
                       showDateButton: false,
                       pickerFormat: PickerFormat.ymd,
                       boardTitle: 'حدد التاريخ المطلوب',

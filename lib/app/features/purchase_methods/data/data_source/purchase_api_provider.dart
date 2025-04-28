@@ -65,9 +65,11 @@ class PurchaseApiProvider extends GetxController {
         print('1111printDate=======>${response.data['print_date']}');
         return true;
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
         return false;
       } else {
+        print('===w==w=e=w=we=e=====');
+        print(response.data['errors'][0]);
         if ((response.data?['logged_in'] ?? 1) == 0) {
           rxRequestStatus.value = Status.error;
           exitDialog(response.data['errors'][0]);

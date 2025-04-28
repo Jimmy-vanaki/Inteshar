@@ -148,8 +148,11 @@ class BluetoothPage extends StatelessWidget {
         if (serial.serial?.isNotEmpty ?? false) {
           printText("\nSerial : ${serial.serial}");
         }
-
-        printText('\nPin Code :');
+        if (serial.code1 == null &&
+            (serial.code1 is String) &&
+            serial.code1.isNotEmpty) {
+          printText('\nPin Code :');
+        }
         if (pinCodeBytes != null) {
           PrintBluetoothThermal.writeBytes(pinCodeBytes);
         }
@@ -421,7 +424,7 @@ class BluetoothPage extends StatelessWidget {
         highDensityVertical: true,
       );
 
-      return bytes; // اینجا bytes به صورت List<int> برگشت داده می‌شود
+      return bytes;
     } catch (e) {
       print("Error processing image: $e");
       return null;
@@ -492,29 +495,18 @@ class BluetoothPage extends StatelessWidget {
             (serial.code1 is String) &&
             serial.code1!.isNotEmpty)
           [
-            "\x1B\x61\x00"
-                "\x1B\x4D\x01" // Select font B
-                "\x1B\x45\x01" // Activate bold
-                "\x1B\x45\x01\x1D\x21\x11${serial.code1}\x1D\x21\x00\x1B\x45\x00"
-                "\x1B\x4D\x00" // Reset to font A
+            "${serial.code1}"
                 "\n"
                 "\x1B\x61\x00"
                 "\x1B\x4D\x01" // Select font B
                 "\x1B\x45\x01" // Activate bold
-                "\x1B\x45\x01\x1D\x21\x11${serial.code2}\x1D\x21\x00\x1B\x45\x00"
+                "\x1D\x21\x11${serial.code2}\x1D\x21\x00\x1B\x45\x00"
                 "\x1B\x4D\x00" // Reset to font A
                 "\n"
-                "\x1B\x61\x00"
-                "\x1B\x4D\x01" // Select font B
-                "\x1B\x45\x01" // Activate bold
-                "\x1B\x45\x01\x1D\x21\x11${serial.code3}\x1D\x21\x00\x1B\x45\x00"
-                "\x1B\x4D\x00" // Reset to font A
+                "${serial.code3}"
                 "\n"
-                "\x1B\x61\x00"
-                "\x1B\x4D\x01" // Select font B
-                "\x1B\x45\x01" // Activate bold
-                "\x1B\x45\x01\x1D\x21\x11${serial.code4}\x1D\x21\x00\x1B\x45\x00"
-                "\x1B\x4D\x00 \n\n\n" // Reset to font A
+                "${serial.code4}"
+                "\n\n\n"
           ].where((code) => code.isNotEmpty).join("\n"),
       ].join('\n');
     }

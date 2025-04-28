@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 
 class Constants {
   static const String appTitle = 'inteshar';
-  static const String baseUrl = "http://inteshar.net/api/v4";
+  static const String baseUrl = "http://v2.inteshar.net/api/v5";
 
   static final GetStorage localStorage = GetStorage();
   static String userToken = '';

@@ -81,7 +81,7 @@ class CustomDrawer extends StatelessWidget {
         "title": 'سياسية الخصوصية',
         "icon": 'confidential-discussion',
         "onTap": () {
-          urlLauncher('inteshar.net/privacy_inteshar.html');
+          urlLauncher('https://inteshar.net/privacy_inteshar.html');
         }
       },
       {
@@ -269,37 +269,37 @@ class CustomDrawer extends StatelessWidget {
                 ),
               ),
               const Gap(5),
-              ZoomTapAnimation(
-                onTap: () {
-                  urlLauncher('https://dijlah.org');
-                },
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Powered by ',
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withAlpha(100),
-                          fontSize: 13,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'DIjlah IT',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withAlpha(100),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // ZoomTapAnimation(
+              //   onTap: () {
+              //     urlLauncher('https://dijlah.org');
+              //   },
+              //   child: Text.rich(
+              //     TextSpan(
+              //       children: [
+              //         TextSpan(
+              //           text: 'Powered by ',
+              //           style: TextStyle(
+              //             color: Theme.of(context)
+              //                 .colorScheme
+              //                 .onPrimary
+              //                 .withAlpha(100),
+              //             fontSize: 13,
+              //           ),
+              //         ),
+              //         TextSpan(
+              //           text: 'DIjlah IT',
+              //           style: TextStyle(
+              //             fontWeight: FontWeight.w700,
+              //             color: Theme.of(context)
+              //                 .colorScheme
+              //                 .onPrimary
+              //                 .withAlpha(100),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ],

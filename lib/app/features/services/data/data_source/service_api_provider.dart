@@ -1,14 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:inteshar/app/config/constants.dart';
 import 'package:inteshar/app/config/handle_logout.dart';
 import 'package:inteshar/app/config/status.dart';
 import 'package:inteshar/app/core/common/widgets/exit_dialog.dart';
-import 'package:inteshar/app/core/data/data_source/update_info.dart';
 import 'package:inteshar/app/features/home/data/data_source/home_api_provider.dart';
+import 'package:inteshar/app/features/services/view/widgets/result_page.dart';
 
 class ServiceApiProvider extends GetxController {
   final RxString errorMessage = ''.obs;
@@ -28,6 +26,8 @@ class ServiceApiProvider extends GetxController {
     required String type,
     required String price,
     required String category,
+    required String title,
+    required BuildContext context,
   }) async {
     rxRequestStatus.value = Status.loading;
     print(categoryId);
@@ -50,21 +50,26 @@ class ServiceApiProvider extends GetxController {
         ),
       );
       print('++++++++++${response.statusCode}');
-      print('++++++++++$response');
+      print('++++++++++${response}');
       if (response.statusCode == 200) {
         rxRequestStatus.value = Status.completed;
-        //
-        // await updateController.updateInformation();
         updateController.inventory.value = response.data['inventory'];
         updateController.update();
         Get.back();
-        showResult(
-            phone: phone,
-            trackingCode: response.data['data'],
-            price: price,
-            category: category);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultPage(
+              phone: phone,
+              trackingCode: response.data['data'],
+              price: price,
+              category: category,
+              title: title,
+            ),
+          ),
+        );
       } else if (response.statusCode == 401) {
-        handleLogout(response.data['error']['message']);
+        handleLogout(response.data['error']);
       } else {
         if ((response.data?['logged_in'] ?? 1) == 0) {
           rxRequestStatus.value = Status.completed;
@@ -84,114 +89,4 @@ class ServiceApiProvider extends GetxController {
       print(e);
     }
   }
-}
-
-showResult({
-  required String phone,
-  required String trackingCode,
-  required String price,
-  required String category,
-}) {
-  Get.defaultDialog(
-    title: ' ',
-    titleStyle: const TextStyle(fontSize: 0),
-    content: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/svgs/terms-check.svg',
-              colorFilter: const ColorFilter.mode(
-                Colors.green,
-                BlendMode.srcIn,
-              ),
-            ),
-            const Gap(6),
-            const Text(
-              'تمت التعبئة بنجاح',
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        const Gap(18),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('رقم التتبع :'),
-            const Gap(10),
-            Expanded(
-              child: Text(
-                trackingCode,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.4,
-                ),
-                textDirection: TextDirection.ltr,
-                softWrap: true,
-                overflow: TextOverflow.visible,
-              ),
-            ),
-          ],
-        ),
-        const Gap(5),
-        const Divider(),
-        const Gap(5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'رقم الهاتف :',
-              style: TextStyle(
-                fontSize: 14,
-              ),
-            ),
-            Text(
-              phone,
-              style: const TextStyle(
-                fontSize: 17,
-                letterSpacing: 1.4,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        const Gap(5),
-        const Divider(),
-        const Gap(5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('الفئة :'),
-            Text(
-              price,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        const Gap(5),
-        const Divider(),
-        const Gap(5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('السعر :'),
-            Text(
-              category,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }

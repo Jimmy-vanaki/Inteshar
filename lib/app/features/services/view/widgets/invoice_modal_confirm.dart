@@ -75,60 +75,43 @@ Future<dynamic> invoiceModalConfirm({
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Theme.of(context)
-                      .extension<SuccessColorTheme>()
-                      ?.successColor),
-                ),
-                onPressed: () {
-                  serviceApiProvider.fetchTransaction(
-                    phone: phone,
-                    categoryId: categoryId,
-                    type: type,
-                    price: price,
-                    category: category,
-                  );
-                },
-                child: Obx(() {
-                  final requestStatus =
-                      serviceApiProvider.rxRequestStatus.value;
+              child: Obx(() {
+                final requestStatus = serviceApiProvider.rxRequestStatus.value;
+                final isLoading = requestStatus == Status.loading;
 
-                  switch (requestStatus) {
-                    case Status.loading:
-                      return const Center(child: CustomLoading());
-
-                    case Status.error:
-                      return Text(
-                        serviceApiProvider.errorMessage.value,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
+                return ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context)
+                          .extension<SuccessColorTheme>()
+                          ?.successColor,
+                    ),
+                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          serviceApiProvider.fetchTransaction(
+                            phone: phone,
+                            categoryId: categoryId,
+                            type: type,
+                            price: price,
+                            category: category,
+                            context: context,
+                            title: 'TopUp',
+                          );
+                        },
+                  child: isLoading
+                      ? const Center(child: CustomLoading())
+                      : Text(
+                          'تأكيد',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .extension<SuccessColorTheme>()
+                                ?.onSuccessColor,
+                          ),
                         ),
-                      );
-
-                    case Status.initial:
-                      return Text(
-                        'تأكيد',
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .extension<SuccessColorTheme>()
-                              ?.onSuccessColor,
-                        ),
-                      );
-
-                    case Status.completed:
-                    default:
-                      return Text(
-                        'تأكيد',
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .extension<SuccessColorTheme>()
-                              ?.onSuccessColor,
-                        ),
-                      );
-                  }
-                }),
-              ),
+                );
+              }),
             ),
           ],
         ),
@@ -136,7 +119,7 @@ Future<dynamic> invoiceModalConfirm({
     },
   ).whenComplete(
     () {
-      FocusScope.of(context).unfocus();
+      // FocusScope.of(context).unfocus();
       Get.delete<ServiceApiProvider>();
     },
   );

@@ -29,7 +29,6 @@ class USerReportingList extends StatelessWidget {
   final List<ReportModel> reportDataList;
   @override
   Widget build(BuildContext context) {
-    RePrintApiProvider rePrintApiProvider = Get.find<RePrintApiProvider>();
     final BluetoothController bluetoothController =
         Get.put(BluetoothController(), permanent: true);
     final updateController = Get.find<HomeApiProvider>();
@@ -73,10 +72,10 @@ class USerReportingList extends StatelessWidget {
               ),
               ZoomTapAnimation(
                 child: ElevatedButton.icon(
-                  onPressed: !rePrintApiProvider.reportPrint.value
+                  onPressed: !reportValueController.reportPrint.value
                       ? null
                       : () async {
-                          rePrintApiProvider.reportPrint.value = false;
+                          reportValueController.reportPrint.value = false;
                           final savedPrinter =
                               Constants.localStorage.read('printAddres');
                           if (savedPrinter != null) {
@@ -217,6 +216,9 @@ class USerReportingList extends StatelessWidget {
                       ),
                       Obx(
                         () {
+                          RePrintApiProvider rePrintApiProvider = Get.put(
+                              RePrintApiProvider(),
+                              tag: index.toString());
                           return (purchaseMethodsController
                                       .purchaseMethodsSelected.value !=
                                   -1)

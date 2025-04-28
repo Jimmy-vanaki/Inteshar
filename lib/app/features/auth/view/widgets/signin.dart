@@ -162,45 +162,66 @@ class Signin extends StatelessWidget {
                       const Gap(20),
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            if (formKey.currentState!.validate()) {
-                              singinApiProvider.login(
-                                username:
-                                    singinApiProvider.usernameController.text,
-                                password:
-                                    singinApiProvider.passwordController.text,
-                              );
-                            }
-                          },
-                          child: Obx(
-                            () {
-                              switch (singinApiProvider.rxRequestStatus.value) {
-                                case Status.completed:
-                                  return const Text(
-                                    'دخول',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  );
-                                case Status.error:
-                                  return Text(
-                                    singinApiProvider.errorMessage.value,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                                  );
-                                case Status.loading:
-                                  return CustomLoading(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  );
-                                default:
-                                  return const Text('دخول');
-                              }
-                            },
+                        child: Obx(
+                          () => ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor:
+                                  const Color.fromARGB(255, 55, 55, 55),
+                              backgroundColor: _getBackgroundColor(
+                                  singinApiProvider.rxRequestStatus.value,
+                                  context),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed:
+                                singinApiProvider.rxRequestButtonStatus.value ==
+                                        Status.loading
+                                    ? null
+                                    : () {
+                                        FocusScope.of(context).unfocus();
+                                        if (formKey.currentState!.validate()) {
+                                          singinApiProvider.login(
+                                            username: singinApiProvider
+                                                .usernameController.text,
+                                            password: singinApiProvider
+                                                .passwordController.text,
+                                          );
+                                        }
+                                      },
+                            child: Obx(
+                              () {
+                                switch (
+                                    singinApiProvider.rxRequestStatus.value) {
+                                  case Status.completed:
+                                    return Text(
+                                      'دخول',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                      ),
+                                    );
+                                  case Status.error:
+                                    return Text(
+                                      singinApiProvider.errorMessage.value,
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onError,
+                                      ),
+                                    );
+                                  case Status.loading:
+                                    return CustomLoading(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    );
+                                  default:
+                                    return const Text('دخول');
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -249,5 +270,5 @@ Color _getBackgroundColor(Status status, BuildContext context) {
   if (status == Status.error) {
     return Theme.of(context).colorScheme.error;
   }
-  return Theme.of(context).colorScheme.primary;
+  return Theme.of(context).colorScheme.secondary;
 }
