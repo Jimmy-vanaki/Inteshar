@@ -35,4 +35,15 @@ class LocalAuth {
       return false;
     }
   }
+
+  static Future<bool> hasBiometrics() async {
+    try {
+      final List<BiometricType> availableBiometrics =
+          await _auth.getAvailableBiometrics();
+      return availableBiometrics.isNotEmpty;
+    } catch (e) {
+      debugPrint('Error checking biometrics: $e');
+      return false;
+    }
+  }
 }

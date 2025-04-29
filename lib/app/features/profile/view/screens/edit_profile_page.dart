@@ -205,9 +205,33 @@ class EditProfilePage extends StatelessWidget {
                                       .passwordConfirmController
                                       .text
                                       .isNotEmpty) {
-                                final authenticate =
-                                    await LocalAuth.authenticate();
-                                if (authenticate) {
+            
+                                        final bool canAuthenticate =
+                                    await LocalAuth.hasBiometrics();
+                                if (canAuthenticate) {
+                                  final bool authenticate =
+                                      await LocalAuth.authenticate();
+                                  if (authenticate) {
+                                    // If authenticated successfully, update profile
+                                    editeProfileApiProvider.updateProfile(
+                                      address: editProfilePageController
+                                          .addressController.text,
+                                      mobile: editProfilePageController
+                                          .mobileController.text,
+                                      password: editProfilePageController
+                                          .passwordController.text,
+                                      passwordConfirmation:
+                                          editProfilePageController
+                                              .passwordConfirmController.text,
+                                      photo: editProfilePageController
+                                              .convertImageToBase64() ??
+                                          '',
+                                      lat: locationController.lat.value,
+                                      lon: locationController.lon.value,
+                                    );
+                                  }
+                                } else {
+                                  // If no biometric support, update profile directly
                                   editeProfileApiProvider.updateProfile(
                                     address: editProfilePageController
                                         .addressController.text,
